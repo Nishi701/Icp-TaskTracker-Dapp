@@ -1,31 +1,124 @@
-import { useState } from 'react';
-import { tasktredapp_backend } from 'declarations/tasktredapp_backend';
+import React, { useState, useEffect } from "react";
+import { tasktredapp_backend } from "declarations/tasktredapp_backend";
 
-function App() {
-  const [greeting, setGreeting] = useState('');
+export default function App() {
+  const [tasks, setTasks] = useState([]);
+  const [title, setTitle] = useState("");
+  const [editingId, setEditingId] = useState(null);    // Track which task is being edited
+  const [editingTitle, setEditingTitle] = useState(""); // Store the new title while editing
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const name = event.target.elements.name.value;
-    tasktredapp_backend.greet(name).then((greeting) => {
-      setGreeting(greeting);
-    });
-    return false;
-  }
+  useEffect(() => {
+    loadTasks();
+  }, []);
+
+  const loadTasks = async () => {
+    try {
+      const all = await tasktredapp_backend.get_tasks();
+      setTasks(all);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  };
+
+  const addTask = async () => {
+    if (!title.trim()) return;
+
+    const task = {
+      id: BigInt(Date.now()),
+      title,
+      done: false,
+    };
+
+    try {
+      await tasktredapp_backend.add_task(task);
+      setTitle("");
+      loadTasks();
+    } catch (error) {
+      console.error("Error calling add_task:", error);
+    }
+  };
+
+  const completeTask = async (id) => {
+    try {
+      await tasktredapp_backend.complete_task(id);
+      loadTasks();
+    } catch (error) {
+      console.error("Error completing task:", error);
+    }
+  };
+
+  const deleteTask = async (id) => {
+    try {
+      await tasktredapp_backend.remove_task(id);
+      loadTasks();
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  };
+
+  // Update task title handler
+  const updateTask = async (id) => {
+    if (!editingTitle.trim()) return;
+
+    try {
+      // Call backend update, assuming it takes (id, title, done)
+      await tasktredapp_backend.update_task(id, editingTitle, false);
+      setEditingId(null);
+      setEditingTitle("");
+      loadTasks();
+    } catch (error) {
+      console.error(" Error updating task:", error);
+    }
+  };
 
   return (
-    <main>
-      <img src="/logo2.svg" alt="DFINITY logo" />
-      <br />
-      <br />
-      <form action="#" onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
-      </form>
-      <section id="greeting">{greeting}</section>
-    </main>
+    <div className="container">
+      <h1> Task Tracker DApp</h1>
+      <div className="input-group">
+        <input
+          type="text"
+          placeholder="New task..."
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <button onClick={addTask}>Add</button>
+      </div>
+
+      <ul className="task-list">
+        {tasks.map((task) => (
+          <li key={task.id} className={task.done ? "done" : ""}>
+            {editingId === task.id ? (
+              <>
+                <input
+                  type="text"
+                  value={editingTitle}
+                  onChange={(e) => setEditingTitle(e.target.value)}
+                />
+                <button onClick={() => updateTask(task.id)}>Save</button>
+                <button onClick={() => setEditingId(null)}>Cancel</button>
+              </>
+            ) : (
+              <>
+                {task.title}
+                <div>
+                  {!task.done && (
+                    <button onClick={() => completeTask(task.id)}>Done</button>
+                  )}
+                  <button onClick={() => deleteTask(task.id)}>Delete</button>
+                  <button
+                    onClick={() => {
+                      setEditingId(task.id);
+                      setEditingTitle(task.title);
+                    }}
+                  >
+                    Edit
+                  </button>
+                </div>
+              </>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
-
-export default App;

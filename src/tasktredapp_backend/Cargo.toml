@@ -10,5 +10,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 candid = "0.10"
-ic-cdk = "0.17"
-ic-cdk-timers = "0.11" # Feel free to remove this dependency if you don't need timers
+ic-cdk = "0.18"
+ic-cdk-macros = "0.18"
+ic-cdk-timers = "0.12"  # or the latest 0.12.x version available on crates.io
+serde = { version = "1.0.219", features = ["derive"] }

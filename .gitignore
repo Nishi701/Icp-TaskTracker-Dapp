@@ -23,3 +23,13 @@ dist/
 
 # environment variables
 .env
+
+# Logs
+*.log
+
+# OS swap/temp files
+*.swp
+*.swo
+
+# Coverage reports
+coverage/

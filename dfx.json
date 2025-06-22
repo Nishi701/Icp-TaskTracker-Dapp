@@ -14,16 +14,20 @@
     "tasktredapp_backend": {
       "candid": "src/tasktredapp_backend/tasktredapp_backend.did",
       "package": "tasktredapp_backend",
-      "type": "rust"
+      "type": "rust",
+      "build": "cargo build --target wasm32-unknown-unknown --release"
     },
     "tasktredapp_frontend": {
       "dependencies": [
         "tasktredapp_backend"
       ],
+      "type": "assets",
       "source": [
         "src/tasktredapp_frontend/dist"
       ],
-      "type": "assets",
+      "frontend": {
+        "entrypoint": "index.html"
+      },
       "workspace": "tasktredapp_frontend"
     }
   },
