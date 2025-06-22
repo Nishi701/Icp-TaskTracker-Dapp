@@ -1,8 +1,26 @@
-# `tasktredapp`
+# ICP Task Tracker DApp 📝
 
-Welcome to your new `tasktredapp` project and to the Internet Computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
+A decentralized Task Tracker DApp built with **Rust (backend)** and **React (frontend)** on the **Internet Computer Protocol (ICP)**.
 
-To get started, you might want to explore the project directory structure and the default configuration file. Working with this project in your development environment will not affect any production deployment or identity tokens.
+---
+
+## 🚀 Features
+
+- ✅ Add new tasks
+- ✅ Mark tasks as completed
+- ✅ Delete tasks
+- ✅ View all tasks in real-time
+- ⚙️ Backend built using Rust with `ic-cdk`
+- 🌐 Frontend built using React
+
+---
+
+## 📦 Tech Stack
+
+- 🔧 Internet Computer (ICP)
+- 🦀 Rust (Backend canister)
+- ⚛️ React (Frontend)
+- 📦 dfx (IC SDK)
 
 To learn more before you start working with `tasktredapp`, see the following documentation available online:
 
